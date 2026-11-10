@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jay Limbachiya | Senior Full Stack & Mobile Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --bg-card: #111622;
+      --bg-surface: #171f30;
+      --border-color: #243049;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Ambient lighting */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.12;
+    }
+    .glow-1 { top: -120px; left: 15%; width: 500px; height: 500px; background: var(--accent-blue); }
+    .glow-2 { top: 45%; right: 10%; width: 450px; height: 450px; background: var(--accent-cyan); }
+
+    /* Header & Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(10, 13, 20, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+      padding: 16px 0;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand-logo {
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo span {
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--accent-emerald);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--accent-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-emerald);
+    }
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+    .btn-contact {
+      background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+      color: #fff !important;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      transition: transform 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+    .btn-contact:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Contact Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 14, 0.78);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .contact-modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 480px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      position: relative;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+    }
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      padding: 4px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .modal-close-btn:hover {
+      color: #fff;
+      background: var(--bg-surface);
+    }
+    .contact-channels {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .contact-channel-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      padding: 14px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .contact-channel-item:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+    .channel-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .channel-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      flex-shrink: 0;
+    }
+    .channel-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .channel-label {
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .channel-val {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    .copy-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .copy-chip:hover {
+      background: var(--accent-blue);
+      color: #fff;
+      border-color: var(--accent-blue);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 70px 0 40px;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: var(--accent-cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #60a5fa, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin-bottom: 30px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+      color: #fff;
+    }
+    .btn-outline {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: var(--bg-surface);
+      border-color: #3b82f6;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 22px;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+    }
+    .metric-val {
+      font-size: 1.85rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .metric-label {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Section Styling */
+    section {
+      padding: 50px 0;
+    }
+    .section-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      margin-bottom: 30px;
+    }
+
+    /* Core Systems Grid */
+    .systems-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .system-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .system-card:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+    }
+    .system-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      margin-bottom: 16px;
+    }
+    .system-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    .system-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      background: rgba(36, 48, 73, 0.65);
+      color: #93c5fd;
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(147, 197, 253, 0.15);
+    }
+
+    /* Experience Card */
+    .company-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 30px;
+    }
+    .company-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+    .company-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .company-sub {
+      color: var(--accent-cyan);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .role-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+    }
+    .exp-bullets {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .exp-bullets li {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      position: relative;
+      padding-left: 24px;
+      line-height: 1.6;
+    }
+    .exp-bullets li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--accent-blue);
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    .exp-bullets strong {
+      color: #fff;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .skill-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 22px;
+    }
+    .skill-box h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pill-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 30px 0;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      .systems-grid, .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-title { font-size: 2.3rem; }
+    }
+    @media (max-width: 640px) {
+      .systems-grid, .skills-grid, .metrics-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .hero-title { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb glow-1"></div>
+  <div class="glow-orb glow-2"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-inner">
+      <div class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        <span>Jay Limbachiya</span>
+      </div>
+      <div class="badge-status">
+        <span class="pulse-dot"></span>
+        Bizmatics (Harris) Mumbai
+      </div>
+      <div class="nav-links">
+        <a href="#systems">Systems</a>
+        <a href="#experience">Experience</a>
+        <a href="#skills">Skills</a>
+        <button type="button" class="btn-contact" onclick="openContactModal()">Contact</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contact Modal -->
+  <div class="modal-overlay" id="contactModal" onclick="handleOverlayClick(event)">
+    <div class="contact-modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <h3>
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Get in Touch
+        </h3>
+        <button type="button" class="modal-close-btn" onclick="closeContactModal()" aria-label="Close modal">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="contact-channels">
+        <!-- Phone Direct Call + Copy -->
+        <div class="contact-channel-item">
+          <a href="tel:+918080256860" style="text-decoration: none; display: flex; align-items: center; gap: 12px; color: inherit; flex: 1;">
+            <div class="channel-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="channel-details">
+              <span class="channel-label">Mobile Phone</span>
+              <span class="channel-val">+91-8080256860</span>
+            </div>
+          </a>
+          <button type="button" class="copy-chip" onclick="copyText('+918080256860', this)">Copy</button>
+        </div>
+
+        <!-- Email Direct Mailto + Copy -->
+        <div class="contact-channel-item">
+          <a href="mailto:jaylimbachiya702@gmail.com" style="text-decoration: none; display: flex; align-items: center; gap: 12px; color: inherit; flex: 1;">
+            <div class="channel-icon">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
+            <div class="channel-details">
+              <span class="channel-label">Email Address</span>
+              <span class="channel-val">jaylimbachiya702@gmail.com</span>
+            </div>
+          </a>
+          <button type="button" class="copy-chip" onclick="copyText('jaylimbachiya702@gmail.com', this)">Copy</button>
+        </div>
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/limbachiya-jay/" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
+          <div class="channel-info">
+            <div class="channel-icon">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.79v8.37H6.46v-8.37M7.86 6.32a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z"/></svg>
+            </div>
+            <div class="channel-details">
+              <span class="channel-label">LinkedIn</span>
+              <span class="channel-val">Jay Limbachiya | LinkedIn</span>
+            </div>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+        </a>
+
+        <!-- GitHub -->
+        <a href="https://github.com/jaylimbachiya702" target="_blank" rel="noopener noreferrer" class="contact-channel-item">
+          <div class="channel-info">
+            <div class="channel-icon">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            </div>
+            <div class="channel-details">
+              <span class="channel-label">GitHub</span>
+              <span class="channel-val">jaylimbachiya702</span>
+            </div>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-eyebrow">
+        <span>●</span> Senior Software Engineer — Full Stack &amp; Mobile
+      </div>
+      <h1 class="hero-title">
+        Building secure, high-performance <span>mobile &amp; web applications</span> in regulated healthcare.
+      </h1>
+      <p class="hero-desc">
+        Specializing in production React Native, custom native iOS (Swift) &amp; Android (Kotlin) bridging, ReactJS, Electron, and Node.js. 
+        Owning features end-to-end from API and data design through to release on the App Store and Play Store at <strong>Bizmatics (Harris Healthcare)</strong>.
+      </p>
+
+      <div class="hero-actions">
+        <a href="https://github.com/jaylimbachiya702" target="_blank" rel="noopener noreferrer" class="btn-action btn-primary">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          jaylimbachiya702
+        </a>
+        <a href="https://www.linkedin.com/in/limbachiya-jay/" target="_blank" rel="noopener noreferrer" class="btn-action btn-outline">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.79v8.37H6.46v-8.37M7.86 6.32a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z"/></svg>
+          Jay Limbachiya | LinkedIn
+        </a>
+        <a href="tel:+918080256860" class="btn-action btn-outline">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          +91-8080256860
+        </a>
+        <a href="mailto:jaylimbachiya702@gmail.com" class="btn-action btn-outline">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          jaylimbachiya702@gmail.com
+        </a>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-val">~4 Yrs</div>
+          <div class="metric-label">Production Experience</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">-20%</div>
+          <div class="metric-label">Runtime Errors via TypeScript</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">-30%</div>
+          <div class="metric-label">Auth Time via Encrypted QR</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-val">100%</div>
+          <div class="metric-label">App &amp; Play Store Release Track</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Core Production Systems -->
+    <section id="systems">
+      <h2 class="section-title">Production Systems Engineered</h2>
+      <p class="section-subtitle">Real-world features and architectures shipped for Bizmatics Healthcare.</p>
+
+      <div class="systems-grid">
+        <!-- 1. Offline-First -->
+        <div class="system-card">
+          <div>
+            <div class="system-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3>Offline-First Architecture</h3>
+            <p>Engineered local persistence and synchronization pipelines so critical clinical workflows operate seamlessly without an active connection, preventing session and data loss.</p>
+          </div>
+          <div class="tech-tags">
+            <span class="tag">Local Sync</span>
+            <span class="tag">Optimistic UI</span>
+            <span class="tag">TypeScript</span>
+          </div>
+        </div>
+
+        <!-- 2. Secure Two-Way Messaging -->
+        <div class="system-card">
+          <div>
+            <div class="system-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>Two-Way Secure Messaging</h3>
+            <p>Designed and built internal communication services featuring JWT authentication and compliant chat pipelines with real-time push delivery across foreground and background states.</p>
+          </div>
+          <div class="tech-tags">
+            <span class="tag">WebSockets</span>
+            <span class="tag">JWT Auth</span>
+            <span class="tag">Firebase (FCM)</span>
+          </div>
+        </div>
+
+        <!-- 3. Native iOS & Android Modules -->
+        <div class="system-card">
+          <div>
+            <div class="system-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            </div>
+            <h3>Native iOS &amp; Android Modules</h3>
+            <p>Wrote custom native modules in Swift/Objective-C and Kotlin/Java where standard React Native bridges were insufficient, integrating device hardware and third-party SDKs.</p>
+          </div>
+          <div class="tech-tags">
+            <span class="tag">Swift</span>
+            <span class="tag">Kotlin</span>
+            <span class="tag">Native Bridge</span>
+          </div>
+        </div>
+
+        <!-- 4. OCR Card Scanner -->
+        <div class="system-card">
+          <div>
+            <div class="system-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+            </div>
+            <h3>OCR Document Scanner</h3>
+            <p>Built client-side OCR parsing for insurance cards that auto-fills complex patient onboarding forms, removing repetitive manual entry and eliminating transcription errors.</p>
+          </div>
+          <div class="tech-tags">
+            <span class="tag">Camera SDK</span>
+            <span class="tag">OCR Vision</span>
+            <span class="tag">Form Auto-Fill</span>
+          </div>
+        </div>
+
+        <!-- 5. Encrypted QR Login -->
+        <div class="system-card">
+          <div>
+            <div class="system-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/></svg>
+            </div>
+            <h3>Encrypted QR Authentication</h3>
+            <p>Designed and shipped a QR code login system with built-in encryption, reducing authentication time by 30% and providing frictionless, secure access for clinical staff.</p>
+          </div>
+          <div class="tech-tags">
+            <span class="tag">Cryptography</span>
+            <span class="tag">QR Engine</span>
+            <span class="tag">Security</span>
+          </div>
+        </div>
+
+        <!-- 6. Cross-Platform Web & Desktop -->
+        <div class="system-card">
+          <div>
+            <div class="system-icon">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+            </div>
+            <h3>Web &amp; Desktop Ecosystem</h3>
+            <p>Expanded the product footprint beyond mobile by architecting a ReactJS web portal and an Electron desktop build, sharing core business logic across platforms.</p>
+          </div>
+          <div class="tech-tags">
+            <span class="tag">React.js</span>
+            <span class="tag">Electron</span>
+            <span class="tag">Shared Logic</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience">
+      <h2 class="section-title">Professional Experience</h2>
+      <p class="section-subtitle">Full-time engineering tenures at Bizmatics (Harris Healthcare).</p>
+
+      <div class="company-card">
+        <div class="company-header">
+          <div>
+            <div class="company-name">Bizmatics (Harris Healthcare)</div>
+            <div class="company-sub">Senior Software Engineer (Jan 2026 – Present) • Software Engineer (Aug 2022 – Dec 2025)</div>
+          </div>
+          <div class="role-badge">Mumbai, India • Full-time</div>
+        </div>
+
+        <ul class="exp-bullets">
+          <li><strong>End-to-End Ownership:</strong> Own delivery of features across the application, from data model and API design to client interfaces in a compliance-driven healthcare ecosystem.</li>
+          <li><strong>Two-Way Communication &amp; Push:</strong> Designed and built a two-way communication system with JWT-based authentication for secure, compliant chat, backed by Firebase Cloud Messaging across foreground, background, and killed states.</li>
+          <li><strong>Offline Architecture &amp; Accessibility:</strong> Leading design of offline-first local data synchronization so the app remains fully functional without an active network, while integrating voice-guided navigation to improve accessibility.</li>
+          <li><strong>Platform Expansion &amp; Mentorship:</strong> Extended the product past mobile by building a ReactJS web app and an Electron desktop build; directly manage and mentor engineers on design standards and code quality.</li>
+          <li><strong>TypeScript Migration:</strong> Migrated the core production codebase from JavaScript to TypeScript, cutting runtime exceptions by 20% and establishing stricter engineering standards across the team.</li>
+          <li><strong>Native Bridging &amp; Release Pipelines:</strong> Wrote native iOS (Swift/Objective-C) and Android (Kotlin/Java) modules and integrated third-party SDKs; fully owned deployments end to end through the App Store and Google Play Store with automated multi-environment CI/CD flavors.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+      <h2 class="section-title">Technical Expertise</h2>
+      <p class="section-subtitle">Core frameworks, native platform toolchains, and distributed architectures.</p>
+
+      <div class="skills-grid">
+        <div class="skill-box">
+          <h4>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+            Mobile &amp; Native
+          </h4>
+          <div class="pill-cloud">
+            <span class="pill">React Native</span>
+            <span class="pill">iOS (Swift / Obj-C)</span>
+            <span class="pill">Android (Kotlin / Java)</span>
+            <span class="pill">Native Bridging</span>
+            <span class="pill">Fastlane &amp; CI/CD</span>
+            <span class="pill">App Store &amp; Play Store</span>
+          </div>
+        </div>
+
+        <div class="skill-box">
+          <h4>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+            Frontend &amp; Web
+          </h4>
+          <div class="pill-cloud">
+            <span class="pill">TypeScript</span>
+            <span class="pill">JavaScript (ES6+)</span>
+            <span class="pill">React.js</span>
+            <span class="pill">Electron Desktop</span>
+            <span class="pill">Redux / MobX</span>
+            <span class="pill">HTML5 / CSS3</span>
+          </div>
+        </div>
+
+        <div class="skill-box">
+          <h4>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+            Backend &amp; Data
+          </h4>
+          <div class="pill-cloud">
+            <span class="pill">Node.js</span>
+            <span class="pill">Django</span>
+            <span class="pill">REST API Design</span>
+            <span class="pill">MongoDB / SQL</span>
+            <span class="pill">Firebase (FCM)</span>
+            <span class="pill">Docker &amp; Jenkins</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      Jay Limbachiya • Senior Software Engineer • Bizmatics (Harris Healthcare) Mumbai • <a href="mailto:jaylimbachiya702@gmail.com" style="color: var(--accent-cyan); text-decoration: none;">jaylimbachiya702@gmail.com</a> • <a href="tel:+918080256860" style="color: var(--accent-cyan); text-decoration: none;">+91-8080256860</a>
+    </div>
+  </footer>
+
+  <script>
+    function openContactModal() {
+      const modal = document.getElementById('contactModal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeContactModal() {
+      const modal = document.getElementById('contactModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function handleOverlayClick(event) {
+      if (event.target && event.target.id === 'contactModal') {
+        closeContactModal();
+      }
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeContactModal();
+      }
+    });
+
+    function copyText(text, btnElement) {
+      const tempInput = document.createElement('input');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        const originalText = btnElement.innerText;
+        btnElement.innerText = 'Copied!';
+        btnElement.style.background = 'var(--accent-emerald)';
+        btnElement.style.color = '#fff';
+        btnElement.style.borderColor = 'var(--accent-emerald)';
+        setTimeout(() => {
+          btnElement.innerText = originalText;
+          btnElement.style.background = '';
+          btnElement.style.color = '';
+          btnElement.style.borderColor = '';
+        }, 1800);
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+      document.body.removeChild(tempInput);
+    }
+  </script>
+
+</body>
+</html>
